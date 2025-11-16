@@ -13,37 +13,66 @@ public class AuthController : ControllerBase
     private readonly IAuthService _auth;
     public AuthController(IAuthService auth) { _auth = auth; }
 
+    
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromForm] RegisterRequest req)
     {
-        await _auth.RegisterAsync(req);
-        return Ok(new { Message = "Registered. OTP sent to email." });
+        var result = await _auth.RegisterAsync(req);
+
+        if (!result.Success)
+        {
+            return BadRequest(new { Message = result.Message });
+        }
+
+        return Ok(new { Message = result.Message });
     }
 
     [HttpPost("verify-otp")]
     public async Task<IActionResult> VerifyOtp([FromForm] VerifyOtpRequest req)
     {
-        await _auth.VerifyOtpAsync(req);
-        return Ok(new { Message = "Email verified" });
+        var result = await _auth.VerifyOtpAsync(req);
+
+        if (!result.Success)
+        {
+            return BadRequest(new { Message = result.Message });
+        }
+
+        return Ok(new { Message = result.Message });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromForm] LoginRequest req)
     {
         var result = await _auth.LoginAsync(req);
-        if (result == null)
-            return Unauthorized();
 
-        return Ok(result);
+        if (!result.Success)
+        {
+            if (result.Message.Contains("locked", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { Message = result.Message });
+
+            return Unauthorized(new { Message = result.Message });
+        }
+
+        return Ok(result.Data);
     }
-
 
     [Authorize(Roles = "Admin")]
     [HttpPost("admin/create-employee")]
-    public async Task<IActionResult> CreateEmployee([FromForm] Application.DTOs.CreateEmployeeDto dto)
+    public async Task<IActionResult> CreateEmployee([FromForm] CreateEmployeeDto dto)
     {
-        var adminEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? throw new Exception("Admin email not found in token");
-        await _auth.CreateGovernmentEmployeeAsync(adminEmail, dto.FullName,dto.Email, dto.Department_id, dto.Password);
-        return Ok(new { Message = "Employee created" });
+        var adminEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(adminEmail))  return Unauthorized(new { Message = "Admin email not found in token" });
+        var result = await _auth.CreateGovernmentEmployeeAsync( adminEmail,dto.FullName, dto.Email, dto.Department_id,dto.Password);
+        if (!result.Success)
+        {
+            if (result.Message == "Not allowed")
+                return Forbid();
+
+            return BadRequest(new { Message = result.Message });
+        }
+
+        return Ok(new { Message = result.Message });
     }
 }
+
+
