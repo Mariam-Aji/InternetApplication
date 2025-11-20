@@ -18,8 +18,7 @@ public class User
     public int FailedLoginAttempts { get; set; } = 0;
     public bool IsLockedOut { get; set; } = false;
     public DateTime? LockoutEnd { get; set; }
-<<<<<<< HEAD
+
     public ICollection<Complaint>? Complaints { get; set; } = null;
-=======
->>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
+
 }
