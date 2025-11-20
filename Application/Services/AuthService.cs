@@ -40,16 +40,35 @@ public class AuthService : IAuthService
         _hub = hub;
     }
 
+<<<<<<< HEAD
     public async Task RegisterAsync(RegisterRequest request)
     {
         var exists = await _users.GetByEmailAsync(request.Email);
         if (exists != null) throw new Exception("Email already registered.");
         
         var user = new User { Email = request.Email, Role = "Citizen",FullName=request.FullName};
+=======
+    public async Task<(bool Success, string Message)> RegisterAsync(RegisterRequest request)
+    {
+        var exists = await _users.GetByEmailAsync(request.Email);
+        if (exists != null)
+        {
+            return (false, "Email already registered.");
+        }
+
+        var user = new User
+        {
+            Email = request.Email,
+            Role = "Citizen",
+            FullName = request.FullName
+        };
+
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
         await _users.AddAsync(user);
         await SendOtpAsync(user.Email);
+<<<<<<< HEAD
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -58,6 +77,18 @@ public class AuthService : IAuthService
 
         if (user.IsLockedOut && user.LockoutEnd > DateTime.UtcNow)
             throw new Exception($"Account locked until: {user.LockoutEnd}");
+=======
+
+        return (true, "Registration successful. OTP sent to email.");
+    }
+
+    public async Task<(bool Success, string Message, AuthResponse? Data)> LoginAsync(LoginRequest request)
+    {
+        var user = await _users.GetByEmailAsync(request.Email);
+        if (user == null)  return (false, "Invalid credentials", null);
+
+        if (user.IsLockedOut && user.LockoutEnd > DateTime.UtcNow) return (false, $"Account locked until: {user.LockoutEnd}", null);
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
 
         if (user.IsLockedOut && user.LockoutEnd <= DateTime.UtcNow)
         {
@@ -67,7 +98,10 @@ public class AuthService : IAuthService
         }
 
         var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
         if (result == PasswordVerificationResult.Failed)
         {
             user.FailedLoginAttempts++;
@@ -76,10 +110,15 @@ public class AuthService : IAuthService
             {
                 user.IsLockedOut = true;
                 user.LockoutEnd = DateTime.UtcNow.AddMinutes(LockoutMinutes);
+<<<<<<< HEAD
 
                 await _users.UpdateAsync(user);
 
                 // Send SignalR Notification
+=======
+                await _users.UpdateAsync(user);
+
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
                 try
                 {
                     await _hub.Clients.User(user.Id.ToString()).SendAsync("AccountLockedOut", new
@@ -88,6 +127,7 @@ public class AuthService : IAuthService
                         lockoutEnd = user.LockoutEnd
                     });
                 }
+<<<<<<< HEAD
                 catch { /* ignore send errors */ }
 
                 throw new Exception("Account locked");
@@ -95,6 +135,14 @@ public class AuthService : IAuthService
 
             await _users.UpdateAsync(user);
             throw new Exception("Invalid credentials");
+=======
+                catch { }
+
+                return (false, "Account locked due to multiple failed attempts", null);
+            }
+
+            await _users.UpdateAsync(user);  return (false, "Invalid credentials", null);
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
         }
 
         user.IsLockedOut = false;
@@ -102,6 +150,7 @@ public class AuthService : IAuthService
         await _users.UpdateAsync(user);
 
         if (!user.IsEmailConfirmed)
+<<<<<<< HEAD
             throw new Exception("Email not verified");
         var token = GenerateJwt(user);
         return new AuthResponse
@@ -118,6 +167,25 @@ public class AuthService : IAuthService
             
     }
 
+=======
+            return (false, "Email not verified", null);
+
+        var token = GenerateJwt(user);
+        var response = new AuthResponse
+        {
+            Token = token,
+            User = new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Role = user.Role,
+                FullName = user.FullName
+            }
+        };
+
+        return (true, "Login successful", response);
+    }
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
     public async Task SendOtpAsync(string email)
     {
         var user = await _users.GetByEmailAsync(email) ?? throw new Exception("User not found");
@@ -132,6 +200,7 @@ public class AuthService : IAuthService
             $"رمز التحقق هو <b>{code}</b>، صالح لمدة 10 دقائق.");
     }
 
+<<<<<<< HEAD
     public async Task VerifyOtpAsync(VerifyOtpRequest request)
     {
         var user = await _users.GetByEmailAsync(request.Email) ?? throw new Exception("User not found");
@@ -141,12 +210,31 @@ public class AuthService : IAuthService
 
         if (otp == null || otp.ExpireAt < DateTime.UtcNow)
             throw new Exception("OTP invalid or expired");
+=======
+    public async Task<(bool Success, string Message)> VerifyOtpAsync(VerifyOtpRequest request)
+    {
+        var user = await _users.GetByEmailAsync(request.Email);
+        if (user == null)
+        {
+            return (false, "User not found.");
+        }
+
+        var otp = await _db.OtpCodes
+            .OrderByDescending(o => o.Id)
+            .FirstOrDefaultAsync(o => o.UserId == user.Id && !o.Used && o.Code == request.Code);
+
+        if (otp == null || otp.ExpireAt < DateTime.UtcNow)
+        {
+            return (false, "OTP invalid or expired.");
+        }
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
 
         otp.Used = true;
         user.IsEmailConfirmed = true;
 
         await _db.SaveChangesAsync();
         await _users.UpdateAsync(user);
+<<<<<<< HEAD
     }
 
     public async Task CreateGovernmentEmployeeAsync(string adminEmail,string FullName , string employeeEmail, int department_id, string password)
@@ -164,6 +252,31 @@ public class AuthService : IAuthService
         await _users.AddAsync(user);
     }
 
+=======
+
+        return (true, "Email verified successfully.");
+    }
+    public async Task<(bool Success, string Message)> CreateGovernmentEmployeeAsync( string adminEmail,string fullName, string employeeEmail, int department_id, string password)
+    {
+        var admin = await _users.GetByEmailAsync(adminEmail);
+        if (admin == null)  return (false, "Admin not found");
+        if (admin.Role != "Admin") return (false, "Not allowed");
+        var exists = await _users.GetByEmailAsync(employeeEmail);
+        if (exists != null) return (false, "Email already exists");
+        var user = new User
+        {
+            FullName = fullName,
+            Email = employeeEmail,
+            Role = "GovernmentEmployee",
+            Department_id = department_id,
+            IsEmailConfirmed = true,
+            PasswordHash = _passwordHasher.HashPassword(null, password)
+        };
+
+        await _users.AddAsync(user);
+        return (true, "Employee created successfully");
+    }
+>>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
     private string GenerateJwt(User user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
