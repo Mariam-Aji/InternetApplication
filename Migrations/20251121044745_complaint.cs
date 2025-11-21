@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class User : Migration
+    public partial class complaint : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -148,9 +148,9 @@ namespace WebAPI.Migrations
                 columns: new[] { "Id", "StatusName" },
                 values: new object[,]
                 {
-                    { 1, "قيد المراجعة" },
+                    { 1, "جديدة" },
                     { 2, "قيد المعالجة" },
-                    { 3, "تم الحل" },
+                    { 3, "منجزة" },
                     { 4, "مرفوضة" }
                 });
 

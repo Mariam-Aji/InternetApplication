@@ -18,8 +18,6 @@ using WebAPI.Infrastructure.Db;
 using WebAPI.Infrastructure.Email;
 using WebAPI.Infrastructure.Repositories;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 

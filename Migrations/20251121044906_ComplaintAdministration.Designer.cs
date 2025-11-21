@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121040010_ComplaintStatus")]
-    partial class ComplaintStatus
+    [Migration("20251121044906_ComplaintAdministration")]
+    partial class ComplaintAdministration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

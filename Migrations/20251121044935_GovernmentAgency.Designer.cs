@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121035550_User")]
-    partial class User
+    [Migration("20251121044935_GovernmentAgency")]
+    partial class GovernmentAgency
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,7 +124,7 @@ namespace WebAPI.Migrations
                         new
                         {
                             Id = 1,
-                            StatusName = "قيد المراجعة"
+                            StatusName = "جديدة"
                         },
                         new
                         {
@@ -134,7 +134,7 @@ namespace WebAPI.Migrations
                         new
                         {
                             Id = 3,
-                            StatusName = "تم الحل"
+                            StatusName = "منجزة"
                         },
                         new
                         {
