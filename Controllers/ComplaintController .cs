@@ -27,14 +27,28 @@ namespace WebAPI.Controllers
                             ?? throw new Exception("Citizen ID not found in token");
 
             request.UserId = int.Parse(citizenId);
-
             request.GovernmentAgencyId = governmentAgencyId;
 
-            await _service.AddComplaintAsync(request);
+            var complaint = await _service.AddComplaintAsync(request);
 
-            return Ok(new { Message = "تم إنشاء الشكوى بنجاح" });
+            return Ok(new
+            {
+                Message = "تم إنشاء الشكوى بنجاح",
+                Complaint = new
+                {
+                    complaint.Id,
+                    complaint.ComplaintType,
+                    complaint.Description,
+                    complaint.Location,
+                    complaint.UserId,
+                    complaint.GovernmentAgencyId,
+                    complaint.Image1,
+                    complaint.Image2,
+                    complaint.Image3,
+                    complaint.PdfFile,
+                }
+            });
         }
-
 
 
     }

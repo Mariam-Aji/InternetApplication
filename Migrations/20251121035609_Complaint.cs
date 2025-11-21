@@ -5,7 +5,7 @@
 namespace WebAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class ComplaintStatus : Migration
+    public partial class Complaint : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

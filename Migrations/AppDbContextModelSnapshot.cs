@@ -22,7 +22,6 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
                     b.Property<int>("Id")
@@ -111,11 +110,34 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("StatusName")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ComplaintStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            StatusName = "جديدة"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            StatusName = "قيد المعالجة"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            StatusName = "منجزة"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            StatusName = "مرفوضة"
+                        });
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.GovernmentAgency", b =>
@@ -135,8 +157,6 @@ namespace WebAPI.Migrations
                     b.ToTable("GovernmentAgencies");
                 });
 
-=======
->>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
             modelBuilder.Entity("WebAPI.Domain.Entities.OtpCode", b =>
                 {
                     b.Property<int>("Id")
@@ -212,7 +232,6 @@ namespace WebAPI.Migrations
 
                     b.ToTable("Users");
                 });
-<<<<<<< HEAD
 
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
@@ -275,8 +294,6 @@ namespace WebAPI.Migrations
                 {
                     b.Navigation("Complaints");
                 });
-=======
->>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
 #pragma warning restore 612, 618
         }
     }

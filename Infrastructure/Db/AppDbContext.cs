@@ -1,5 +1,6 @@
 using WebAPI.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using WebAPI.Infrastructure.Seeders;
 
 namespace WebAPI.Infrastructure.Db;
 
@@ -9,7 +10,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<OtpCode> OtpCodes { get; set; } = null!;
-<<<<<<< HEAD
+
     public DbSet<Complaint> Complaints { get; set; }
     public DbSet<GovernmentAgency> GovernmentAgencies { get; set; }
     public DbSet<ComplaintStatus> ComplaintStatuses { get; set; }
@@ -18,6 +19,10 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        modelBuilder.Entity<ComplaintStatus>()
+    .Property(c => c.StatusName)
+    .IsUnicode(true);
+        ComplaintStatusSeeder.SeedComplaintStatuses(modelBuilder);
 
 
         modelBuilder.Entity<GovernmentAgency>()
@@ -59,13 +64,7 @@ public class AppDbContext : DbContext
 
 
 
-=======
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
-    }
 
 
-}
->>>>>>> 0ee3cc3ba9dbb367e20882d6611ecb5855c87999
+
+

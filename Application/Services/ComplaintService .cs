@@ -13,7 +13,7 @@ namespace WebAPI.Application.Services
             _repo = repo;
         }
 
-        public async Task AddComplaintAsync(ComplaintRequest request)
+        public async Task<Complaint> AddComplaintAsync(ComplaintRequest request)
         {
             var complaint = new Complaint
             {
@@ -22,7 +22,6 @@ namespace WebAPI.Application.Services
                 Description = request.Description,
                 UserId = request.UserId,
                 GovernmentAgencyId = request.GovernmentAgencyId,
-
             };
 
             complaint.Image1 = await SaveFileAsync(request.Image1);
@@ -31,8 +30,11 @@ namespace WebAPI.Application.Services
             complaint.PdfFile = await SaveFileAsync(request.PdfFile);
 
             await _repo.AddAsync(complaint);
+
+            return complaint; 
         }
 
+       
         private async Task<string> SaveFileAsync(IFormFile file)
         {
             var uploadsFolder = Path.Combine("Uploads");

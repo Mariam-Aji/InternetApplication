@@ -36,21 +36,15 @@ namespace WebAPI.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAllAgencies()
         {
-            try
-            {
-                var agencies = await _service.GetAllAgenciesAsync();
+            var agencies = await _service.GetAllAgenciesAsync();
 
-                return Ok(new
-                {
-                    Message = "تم عرض البيانات بنجاح",
-                    Agencies = agencies
-                });
-            }
-            catch (Exception ex)
+            return Ok(new
             {
-                return BadRequest(new { Message = ex.Message });
-            }
+                Message = "تم عرض الجهات بنجاح",
+                Agencies = agencies
+            });
         }
+
 
     }
 }

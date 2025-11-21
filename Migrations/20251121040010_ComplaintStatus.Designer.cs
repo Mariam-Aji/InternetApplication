@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251117073552_User")]
-    partial class User
+    [Migration("20251121040010_ComplaintStatus")]
+    partial class ComplaintStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,11 +52,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image2")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image3")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
@@ -115,11 +113,34 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("StatusName")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ComplaintStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            StatusName = "جديدة"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            StatusName = "قيد المعالجة"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            StatusName = "منجزة"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            StatusName = "مرفوضة"
+                        });
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.GovernmentAgency", b =>

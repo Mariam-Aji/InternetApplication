@@ -12,7 +12,7 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251117074026_Complaint")]
+    [Migration("20251121035609_Complaint")]
     partial class Complaint
     {
         /// <inheritdoc />
@@ -113,11 +113,34 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("StatusName")
                         .IsRequired()
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ComplaintStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            StatusName = "قيد المراجعة"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            StatusName = "قيد المعالجة"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            StatusName = "تم الحل"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            StatusName = "مرفوضة"
+                        });
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.GovernmentAgency", b =>
