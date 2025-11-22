@@ -90,6 +90,9 @@ namespace WebAPI.Migrations
                     b.Property<int?>("GovernmentAgencyId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ComplaintId")

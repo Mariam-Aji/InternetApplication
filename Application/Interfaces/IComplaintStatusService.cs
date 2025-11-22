@@ -4,7 +4,9 @@ namespace WebAPI.Application.Interfaces
 {
     public interface IComplaintStatusService
     {
-        Task AddStatusAsync(ComplaintStatus status);
+      
         Task<List<ComplaintStatus>> GetAllStatusesAsync();
+        Task<List<Complaint>> GetUserComplaintsAsync(int userId);
+
     }
 }

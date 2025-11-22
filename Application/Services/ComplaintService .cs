@@ -1,20 +1,27 @@
-﻿using WebAPI.Application.DTOs;
+﻿using Microsoft.AspNetCore.SignalR;
+using WebAPI.Application.DTOs;
 using WebAPI.Application.Interfaces;
 using WebAPI.Domain.Entities;
+using WebAPI.Hubs;
 
 namespace WebAPI.Application.Services
 {
     public class ComplaintService : IComplaintService
     {
         private readonly IComplaintRepository _repo;
+        private readonly IHubContext<NotificationHub> _hub;
 
-        public ComplaintService(IComplaintRepository repo)
+        public ComplaintService(IComplaintRepository repo, IHubContext<NotificationHub> hub)
         {
             _repo = repo;
+            _hub = hub;
         }
 
-        public async Task<Complaint> AddComplaintAsync(ComplaintRequest request)
+        public async Task<Complaint?> AddComplaintAsync(ComplaintRequest request)
         {
+            var exists = await _repo.GovernmentAgencyExistsAsync(request.GovernmentAgencyId);
+            if (!exists) return null;
+
             var complaint = new Complaint
             {
                 ComplaintType = request.ComplaintType,
@@ -22,6 +29,7 @@ namespace WebAPI.Application.Services
                 Description = request.Description,
                 UserId = request.UserId,
                 GovernmentAgencyId = request.GovernmentAgencyId,
+                ComplaintStatusId = 1
             };
 
             complaint.Image1 = await SaveFileAsync(request.Image1);
@@ -31,10 +39,16 @@ namespace WebAPI.Application.Services
 
             await _repo.AddAsync(complaint);
 
-            return complaint; 
+             await _hub.Clients.Group($"Citizen_{complaint.UserId}")
+                .SendAsync("ReceiveNotification", new
+                {
+                    complaintId = complaint.Id,               
+                    message = "تم التسليم بنجاح"        
+                });
+
+            return complaint;
         }
 
-       
         private async Task<string> SaveFileAsync(IFormFile file)
         {
             var uploadsFolder = Path.Combine("Uploads");

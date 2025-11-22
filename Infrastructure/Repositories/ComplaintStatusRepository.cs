@@ -30,5 +30,14 @@ namespace WebAPI.Infrastructure.Repositories
         {
             return await _db.ComplaintStatuses.ToListAsync();
         }
+        public async Task<List<Complaint>> GetComplaintsForUserAsync(int userId)
+        {
+            return await _db.Complaints
+                .Include(c => c.ComplaintStatus)
+                .Include(c => c.GovernmentAgency)
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
+        }
+
     }
 }

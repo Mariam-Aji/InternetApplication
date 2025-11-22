@@ -19,7 +19,8 @@
         public int? GovernmentAgencyId { get; set; }
         public GovernmentAgency? GovernmentAgency { get; set; } = null;
 
-        public int? ComplaintStatusId { get; set; } 
+        public int? ComplaintStatusId { get; set; } = 1;
+
         public ComplaintStatus? ComplaintStatus { get; set; } = null;
         public ComplaintAdministration? ComplaintAdministration { get; set; }
     

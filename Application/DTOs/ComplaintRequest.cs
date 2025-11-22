@@ -14,6 +14,7 @@
 
         public int UserId { get; set; }
         public int GovernmentAgencyId { get; set; }
+        public int ComplaintStatusId { get; set; } = 1;
 
 
     }

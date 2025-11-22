@@ -7,5 +7,6 @@ namespace WebAPI.Application.Interfaces
         Task AddAsync(ComplaintStatus status);
         Task<ComplaintStatus?> GetByNameAsync(string name);
         Task<List<ComplaintStatus>> GetAllAsync();
+        Task<List<Complaint>> GetComplaintsForUserAsync(int userId);
     }
 }

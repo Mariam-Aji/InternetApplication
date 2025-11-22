@@ -19,5 +19,19 @@ namespace WebAPI.Infrastructure.Repositories
             _db.Complaints.Add(complaint);
             await _db.SaveChangesAsync();
         }
+
+        public async Task<bool> GovernmentAgencyExistsAsync(int id)
+        {
+            return await _db.GovernmentAgencies.AnyAsync(a => a.Id == id);
+        }
+
+        public async Task<string?> GetComplaintStatusNameAsync(int statusId)
+        {
+            return await _db.ComplaintStatuses
+                            .Where(s => s.Id == statusId)
+                            .Select(s => s.StatusName)
+                            .FirstOrDefaultAsync();
+        }
     }
+
 }

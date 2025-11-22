@@ -12,11 +12,13 @@ namespace WebAPI.Controllers
     {
         private readonly IComplaintService _service;
         private readonly IAuthService _auth;
+        private readonly IComplaintRepository _repo;
 
-        public ComplaintController(IComplaintService service, IAuthService auth)
+        public ComplaintController(IComplaintService service, IAuthService auth, IComplaintRepository repo)
         {
             _service = service;
             _auth = auth;
+            _repo = repo;
         }
 
         [Authorize(Roles = "Citizen")]
@@ -31,10 +33,24 @@ namespace WebAPI.Controllers
 
             var complaint = await _service.AddComplaintAsync(request);
 
+            if (complaint == null)
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    message = "الجهة الحكومية غير موجودة"
+                });
+            }
+
+            var statusName = await _repo.GetComplaintStatusNameAsync(complaint.ComplaintStatusId ?? 1);
+
             return Ok(new
             {
-                Message = "تم إنشاء الشكوى بنجاح",
-                Complaint = new
+                status = 200,
+                message = "تم إنشاء الشكوى بنجاح",
+                complaintNumber = complaint.Id,
+                complaintStatus = statusName,
+                complaint = new
                 {
                     complaint.Id,
                     complaint.ComplaintType,
@@ -45,10 +61,11 @@ namespace WebAPI.Controllers
                     complaint.Image1,
                     complaint.Image2,
                     complaint.Image3,
-                    complaint.PdfFile,
+                    complaint.PdfFile
                 }
             });
         }
+
 
 
     }

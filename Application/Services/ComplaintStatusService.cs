@@ -12,18 +12,15 @@ namespace WebAPI.Application.Services
             _repo = repo;
         }
 
-        public async Task AddStatusAsync(ComplaintStatus status)
-        {
-            var exists = await _repo.GetByNameAsync(status.StatusName);
-            if (exists != null)
-                throw new Exception("هذه الحالة موجودة مسبقًا");
-
-            await _repo.AddAsync(status);
-        }
-
+        
         public async Task<List<ComplaintStatus>> GetAllStatusesAsync()
         {
             return await _repo.GetAllAsync();
         }
+        public async Task<List<Complaint>> GetUserComplaintsAsync(int userId)
+        {
+            return await _repo.GetComplaintsForUserAsync(userId);
+        }
+
     }
 }

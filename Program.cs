@@ -67,6 +67,8 @@ builder.Services.AddScoped<IComplaintRepository, ComplaintRepository>();
 builder.Services.AddScoped<IComplaintService, ComplaintService>();
 builder.Services.AddScoped<IGovernmentAgencyRepository, GovernmentAgencyRepository>();
 builder.Services.AddScoped<IGovernmentAgencyService, GovernmentAgencyService>();
+builder.Services.AddScoped<IComplaintStatusRepository, ComplaintStatusRepository>();
+builder.Services.AddScoped<IComplaintStatusService, ComplaintStatusService>();
 
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 
@@ -109,12 +111,26 @@ builder.Services.AddAuthentication(options =>
 
 });
 builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .SetIsOriginAllowed(_ => true);  
+        });
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("AllowAll");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -127,6 +143,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHub<LockoutHub>("/lockoutHub");
+app.MapHub<NotificationHub>("/notificationHub");
 
 using (var scope = app.Services.CreateScope())
 {

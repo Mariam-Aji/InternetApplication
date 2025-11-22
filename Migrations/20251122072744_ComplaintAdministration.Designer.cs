@@ -12,7 +12,7 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121044906_ComplaintAdministration")]
+    [Migration("20251122072744_ComplaintAdministration")]
     partial class ComplaintAdministration
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace WebAPI.Migrations
 
                     b.Property<int?>("GovernmentAgencyId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -9,11 +9,10 @@
         {
             public ComplaintAdministrationValidator()
             {
-                RuleFor(x => x.ComplaintId)
-                    .NotEmpty().WithMessage("الشكوى المرتبطة مطلوبة");
+                RuleFor(x => x.Notes)
+                .NotEmpty().WithMessage("حقل الملاحظات مطلوب")
+                .MaximumLength(500).WithMessage("الملاحظات يجب ألا تتجاوز 500 حرفًا");
 
-                RuleFor(x => x.GovernmentAgencyId)
-                    .NotEmpty().WithMessage("جهة حكومية مطلوبة للإدارة");
             }
         }
     }
