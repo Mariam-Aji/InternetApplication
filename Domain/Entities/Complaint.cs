@@ -9,7 +9,7 @@
 
         public string Image1 { get; set; }
         public string? Image2 { get; set; } = null;
-        public string?Image3 { get; set; } = null;
+        public string? Image3 { get; set; } = null;
 
         public string PdfFile { get; set; }
 
@@ -23,7 +23,9 @@
 
         public ComplaintStatus? ComplaintStatus { get; set; } = null;
         public ComplaintAdministration? ComplaintAdministration { get; set; }
-    
-}
+        public DateOnly? ComplaintDate { get; set; } 
+
+
+    }
 
 }

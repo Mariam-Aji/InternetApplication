@@ -30,6 +30,9 @@ namespace WebAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateOnly?>("ComplaintDate")
+                        .HasColumnType("date");
+
                     b.Property<int?>("ComplaintStatusId")
                         .HasColumnType("int");
 

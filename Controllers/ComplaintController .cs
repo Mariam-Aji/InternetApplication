@@ -61,7 +61,8 @@ namespace WebAPI.Controllers
                     complaint.Image1,
                     complaint.Image2,
                     complaint.Image3,
-                    complaint.PdfFile
+                    complaint.PdfFile,
+                    complaint.ComplaintDate
                 }
             });
         }

@@ -29,7 +29,9 @@ namespace WebAPI.Application.Services
                 Description = request.Description,
                 UserId = request.UserId,
                 GovernmentAgencyId = request.GovernmentAgencyId,
-                ComplaintStatusId = 1
+                ComplaintStatusId = 1,
+                ComplaintDate = DateOnly.FromDateTime(DateTime.Now)
+
             };
 
             complaint.Image1 = await SaveFileAsync(request.Image1);

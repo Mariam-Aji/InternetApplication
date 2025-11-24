@@ -25,6 +25,7 @@ namespace WebAPI.Controllers
             var statuses = await _service.GetAllStatusesAsync();
             return Ok(statuses);
         }
+        [Authorize(Roles = "Citizen")]
         [HttpGet("my-complaints")]
         public async Task<IActionResult> GetMyComplaints()
         {
@@ -50,7 +51,9 @@ namespace WebAPI.Controllers
                 complaints = complaints.Select(c => new
                 {
                     id = c.Id,
-                    governmentAgencyName = c.GovernmentAgency.AgencyName,   
+                    Date=c.ComplaintDate,
+                    governmentAgencyName = c.GovernmentAgency.AgencyName,  
+                    description=c.Description,
                     statusName = c.ComplaintStatus.StatusName         
                 })
             });

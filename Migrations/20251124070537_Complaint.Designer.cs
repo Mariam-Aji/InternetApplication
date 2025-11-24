@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121044745_complaint")]
-    partial class complaint
+    [Migration("20251124070537_Complaint")]
+    partial class Complaint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly?>("ComplaintDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("ComplaintStatusId")
                         .HasColumnType("int");
@@ -92,6 +95,9 @@ namespace WebAPI.Migrations
 
                     b.Property<int?>("GovernmentAgencyId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
