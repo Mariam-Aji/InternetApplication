@@ -164,7 +164,7 @@ namespace WebAPI.Controllers
             if (!result.Success)
                 return NotFound(new { message = "الشكوى غير موجودة" });
 
-            // 🔥 إرسال إشعار للمواطن
+            
             if (result.CitizenId != null)
             {
                 await _hub.Clients.User(result.CitizenId.ToString())
