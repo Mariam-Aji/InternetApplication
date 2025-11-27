@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
     public DbSet<GovernmentAgency> GovernmentAgencies { get; set; }
     public DbSet<ComplaintStatus> ComplaintStatuses { get; set; }
     public DbSet<ComplaintAdministration> ComplaintAdministrations { get; set; }
-
+    public DbSet<ComplaintLock> ComplaintLocks { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
@@ -61,8 +61,6 @@ public class AppDbContext : DbContext
 
     }
 }
-
-
 
 
 

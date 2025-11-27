@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore ;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -69,7 +70,8 @@ builder.Services.AddScoped<IGovernmentAgencyRepository, GovernmentAgencyReposito
 builder.Services.AddScoped<IGovernmentAgencyService, GovernmentAgencyService>();
 builder.Services.AddScoped<IComplaintStatusRepository, ComplaintStatusRepository>();
 builder.Services.AddScoped<IComplaintStatusService, ComplaintStatusService>();
-
+builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeRepository>();
+builder.Services.AddScoped<IGovermentEmployeeService, GovermentEmployeeService>();
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 
 builder.Services.Configure<SmtpSettings>(
@@ -144,7 +146,13 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<LockoutHub>("/lockoutHub");
 app.MapHub<NotificationHub>("/notificationHub");
-
+app.MapHub<ComplaintHub>("/complainthub");
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
 using (var scope = app.Services.CreateScope())
 {
     var useRepo = scope.ServiceProvider.GetRequiredService<UserRepository>();

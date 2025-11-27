@@ -18,7 +18,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [Authorize(Roles = "Citizen")]
+        
         [HttpGet("all")]
         public async Task<IActionResult> GetAllStatuses()
         {

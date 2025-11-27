@@ -106,6 +106,31 @@ namespace WebAPI.Migrations
                     b.ToTable("ComplaintAdministrations");
                 });
 
+            modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintLock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComplaintId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LockedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComplaintLocks");
+                });
+
             modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintStatus", b =>
                 {
                     b.Property<int>("Id")

@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251121045308_OtpCode")]
-    partial class OtpCode
+    [Migration("20251127201056__Initial")]
+    partial class _Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace WebAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly?>("ComplaintDate")
+                        .HasColumnType("date");
 
                     b.Property<int?>("ComplaintStatusId")
                         .HasColumnType("int");
@@ -93,6 +96,9 @@ namespace WebAPI.Migrations
                     b.Property<int?>("GovernmentAgencyId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ComplaintId")
@@ -101,6 +107,31 @@ namespace WebAPI.Migrations
                     b.HasIndex("GovernmentAgencyId");
 
                     b.ToTable("ComplaintAdministrations");
+                });
+
+            modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintLock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ComplaintId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LockedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComplaintLocks");
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintStatus", b =>
