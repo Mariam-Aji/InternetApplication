@@ -139,7 +139,36 @@ public class AuthService : IAuthService
         await _emailSender.SendEmailAsync(email, "OTP Verification",
             $"رمز التحقق هو <b>{code}</b>، صالح لمدة 10 دقائق.");
     }
+    public async Task<(bool Success, string Message)> ResendOtpAsync(string email)
+    {
+        var user = await _users.GetByEmailAsync(email);
+        if (user == null)
+        {
+            return (false, "User not found");
+        }
 
+        
+        var code = new Random().Next(100000, 999999).ToString();
+        var otp = new OtpCode
+        {
+            UserId = user.Id,
+            Code = code,
+            ExpireAt = DateTime.UtcNow.AddMinutes(10)
+        };
+
+       
+        var oldOtps = _db.OtpCodes.Where(o => o.UserId == user.Id);
+        _db.OtpCodes.RemoveRange(oldOtps);
+
+        _db.OtpCodes.Add(otp);
+        await _db.SaveChangesAsync();
+
+       
+        await _emailSender.SendEmailAsync(email, "OTP Verification",
+            $"رمز التحقق الجديد هو <b>{code}</b>، صالح لمدة 10 دقائق.");
+
+        return (true, "OTP has been resent successfully");
+    }
     public async Task<(bool Success, string Message)> VerifyOtpAsync(VerifyOtpRequest request)
     {
         var user = await _users.GetByEmailAsync(request.Email);

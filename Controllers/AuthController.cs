@@ -26,7 +26,18 @@ public class AuthController : ControllerBase
 
         return Ok(new { Message = result.Message });
     }
+    [HttpPost("resend-otp")]
+    public async Task<IActionResult> ResendOtp([FromForm] resendOtpRequest req)
+    {
+        var result = await _auth.ResendOtpAsync(req.Email);
 
+        if (!result.Success)
+        {
+            return BadRequest(new { Message = result.Message });
+        }
+
+        return Ok(new { Message = result.Message });
+    }
     [HttpPost("verify-otp")]
     public async Task<IActionResult> VerifyOtp([FromForm] VerifyOtpRequest req)
     {
