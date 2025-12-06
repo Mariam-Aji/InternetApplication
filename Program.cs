@@ -103,9 +103,11 @@ builder.Services.AddAuthentication(options =>
         {
             var accessToken = context.Request.Query["access_token"];
             if (!string.IsNullOrEmpty(accessToken) &&
-                context.HttpContext.Request.Path.StartsWithSegments("/lockoutHub"))
+                (context.HttpContext.Request.Path.StartsWithSegments("/lockoutHub") ||
+                context.HttpContext.Request.Path.StartsWithSegments("/complainthub")))
+
             {
-                context.Token = accessToken;
+    context.Token = accessToken;
             }
             return Task.CompletedTask;
         }
