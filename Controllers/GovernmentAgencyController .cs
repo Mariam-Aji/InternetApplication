@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
             var result = await _service.AddAgencyAsync(agency);
 
             if (!result.Success)
-                return Conflict(new { Message = result.Message }); 
+                return Conflict(new { Message = result.Message });
 
             return StatusCode(201, new
             {
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Citizen")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAllAgencies()
         {
