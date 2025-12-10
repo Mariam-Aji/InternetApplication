@@ -106,6 +106,39 @@ namespace WebAPI.Migrations
                     b.ToTable("ComplaintAdministrations");
                 });
 
+            modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ActionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ComplaintId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComplaintId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("ComplaintHistories");
+                });
+
             modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintLock", b =>
                 {
                     b.Property<int>("Id")
@@ -306,9 +339,29 @@ namespace WebAPI.Migrations
                     b.Navigation("GovernmentAgency");
                 });
 
+            modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintHistory", b =>
+                {
+                    b.HasOne("WebAPI.Domain.Entities.Complaint", "Complaint")
+                        .WithMany("Histories")
+                        .HasForeignKey("ComplaintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebAPI.Domain.Entities.User", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Complaint");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
                     b.Navigation("ComplaintAdministration");
+
+                    b.Navigation("Histories");
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.ComplaintStatus", b =>

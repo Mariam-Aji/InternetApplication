@@ -68,6 +68,7 @@ builder.Services.AddScoped<IComplaintRepository, ComplaintRepository>();
 builder.Services.AddScoped<IComplaintService, ComplaintService>();
 builder.Services.AddScoped<IGovernmentAgencyRepository, GovernmentAgencyRepository>();
 builder.Services.AddScoped<IGovernmentAgencyService, GovernmentAgencyService>();
+builder.Services.AddScoped<IComplaintHistoryRepository, ComplaintHistoryRepository>();
 builder.Services.AddScoped<IComplaintStatusRepository, ComplaintStatusRepository>();
 builder.Services.AddScoped<IComplaintStatusService, ComplaintStatusService>();
 builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeRepository>();

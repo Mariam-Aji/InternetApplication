@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
                 });
             }
 
-            var result = await _service.UpdateStatusAsync(dto.ComplaintId, dto.NewStatusId);
+            var result = await _service.UpdateStatusAsync(dto.ComplaintId, dto.NewStatusId, employeeId);
             if (!result.Success)
                 return NotFound(new { message = "الشكوى غير موجودة" });
 
@@ -157,7 +157,7 @@ namespace WebAPI.Controllers
                 return Conflict(new { message = "لا يمكن تعديل الشكوى لأنها قيد المعالجة من قبل موظف آخر." });
             }
 
-            var result = await _service.AddNoteAsync(dto.ComplaintId, dto.Notes);
+            var result = await _service.AddNoteAsync(dto.ComplaintId, dto.Notes, employeeId);
 
             await _service.UnlockComplaintAsync(dto.ComplaintId);
 

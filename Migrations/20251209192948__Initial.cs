@@ -161,6 +161,35 @@ namespace WebAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ComplaintHistories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ComplaintId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: true),
+                    ActionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NewValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ActionDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComplaintHistories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComplaintHistories_Complaints_ComplaintId",
+                        column: x => x.ComplaintId,
+                        principalTable: "Complaints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ComplaintHistories_Users_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "ComplaintStatuses",
                 columns: new[] { "Id", "StatusName" },
@@ -182,6 +211,16 @@ namespace WebAPI.Migrations
                 name: "IX_ComplaintAdministrations_GovernmentAgencyId",
                 table: "ComplaintAdministrations",
                 column: "GovernmentAgencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComplaintHistories_ComplaintId",
+                table: "ComplaintHistories",
+                column: "ComplaintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComplaintHistories_EmployeeId",
+                table: "ComplaintHistories",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Complaints_ComplaintStatusId",
@@ -210,6 +249,9 @@ namespace WebAPI.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ComplaintAdministrations");
+
+            migrationBuilder.DropTable(
+                name: "ComplaintHistories");
 
             migrationBuilder.DropTable(
                 name: "ComplaintLocks");

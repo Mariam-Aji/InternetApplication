@@ -1,4 +1,5 @@
-﻿using WebAPI.Application.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Application.Interfaces;
 using WebAPI.Domain.Entities;
 using WebAPI.Infrastructure.Repositories;
 
@@ -7,10 +8,11 @@ namespace WebAPI.Application.Services
     public class GovermentEmployeeService : IGovermentEmployeeService
     {
         private readonly IGovermentEmployeeRepositry _repo;
-
-        public GovermentEmployeeService(IGovermentEmployeeRepositry repo)
+        private readonly IComplaintHistoryRepository _history;
+        public GovermentEmployeeService(IGovermentEmployeeRepositry repo, IComplaintHistoryRepository history)
         {
             _repo = repo;
+            _history = history;
         }
 
         public async Task<List<Complaint>> GetEmployeeComplaintsAsync(int userId)
@@ -24,15 +26,44 @@ namespace WebAPI.Application.Services
         public async Task UnlockComplaintAsync(int complaintId)
         {  await _repo.UnlockComplaintAsync(complaintId); }
 
-        public async Task<(bool Success, int? CitizenId, string StatusName)> UpdateStatusAsync(int complaintId, int newStatusId)
+        public async Task<(bool Success, int? CitizenId, string StatusName)> UpdateStatusAsync(int complaintId, int newStatusId, int employeeId)
         {
-            return await _repo.UpdateStatusAsync(complaintId, newStatusId);
+            var result = await _repo.UpdateStatusAsync(complaintId, newStatusId);
+
+            if (result.Success)
+            {
+                await _history.AddHistoryAsync(
+                    complaintId,
+                    employeeId,
+                    "StatusChanged",
+                    result.StatusName
+                );
+            }
+
+            return result;
         }
-        public async Task<(bool Success, int? CitizenId)> AddNoteAsync(int complaintId, string note)
+
+
+        public async Task<(bool Success, int? CitizenId)> AddNoteAsync(int complaintId, string note, int employeeId)
         {
-            return await _repo.AddNoteAsync(complaintId, note);
+            var result = await _repo.AddNoteAsync(complaintId, note);
+
+            if (result.Success)
+            {
+                await _history.AddHistoryAsync(
+                    complaintId,
+                    employeeId,
+                    "NoteAdded",
+                    note
+                );
+            }
+
+            return result;
         }
-    }
+
+
 
     }
+
+}
 

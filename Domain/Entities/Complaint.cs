@@ -23,7 +23,8 @@
 
         public ComplaintStatus? ComplaintStatus { get; set; } = null;
         public ComplaintAdministration? ComplaintAdministration { get; set; }
-        public DateOnly? ComplaintDate { get; set; } 
+        public DateOnly? ComplaintDate { get; set; }
+        public ICollection<ComplaintHistory>? Histories { get; set; } = null;
 
 
     }

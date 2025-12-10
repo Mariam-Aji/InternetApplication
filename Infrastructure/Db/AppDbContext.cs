@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<ComplaintStatus> ComplaintStatuses { get; set; }
     public DbSet<ComplaintAdministration> ComplaintAdministrations { get; set; }
     public DbSet<ComplaintLock> ComplaintLocks { get; set; }
+    public DbSet<ComplaintHistory> ComplaintHistories { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
@@ -58,6 +59,19 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(ca => ca.GovernmentAgencyId)
             .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<ComplaintHistory>(entity =>
+        {
+           
+            entity.HasOne(h => h.Complaint)
+          .WithMany(c => c.Histories)
+           .HasForeignKey(h => h.ComplaintId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(h => h.Employee)
+        .WithMany()
+        .HasForeignKey(h => h.EmployeeId)
+           .OnDelete(DeleteBehavior.Restrict);
+        });
 
     }
 }
