@@ -10,12 +10,12 @@ namespace WebAPI.Application.Services
     {
         private readonly IGovermentEmployeeRepositry _repo;
         private readonly IComplaintHistoryRepository _history;
-        private readonly IHubContext<ComplaintHub> _hub;  // إضافة Hub
+        private readonly IHubContext<ComplaintHub> _hub;  
 
         public GovermentEmployeeService(
             IGovermentEmployeeRepositry repo,
             IComplaintHistoryRepository history,
-            IHubContext<ComplaintHub> hub)  // إضافة Hub
+            IHubContext<ComplaintHub> hub)  
         {
             _repo = repo;
             _history = history;
@@ -67,19 +67,16 @@ namespace WebAPI.Application.Services
             return result;
         }
 
-        // 🔹 تابع جديد لإرسال طلب معلومات إضافية
         public async Task<bool> RequestAdditionalInfoAsync(
             int complaintId,
             int citizenId,
             string message,
             int employeeId)
         {
-            // التأكد من وجود الشكوى
             var exists = await _repo.ComplaintExistsAsync(complaintId);
             if (!exists)
                 return false;
 
-            // تسجيل الطلب في History
             await _history.AddHistoryAsync(
                 complaintId,
                 employeeId,
@@ -87,7 +84,6 @@ namespace WebAPI.Application.Services
                 message
             );
 
-            // إرسال إشعار فوري للمواطن عبر Hub
             await _hub.Clients.User(citizenId.ToString())
                 .SendAsync("AdditionalInfoRequested", new
                 {
