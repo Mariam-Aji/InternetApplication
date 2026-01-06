@@ -1,16 +1,18 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using WebAPI.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using WebAPI.Application.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore ;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
 using System.Text;
+using WebAPI.Application.DTOs;
 using WebAPI.Application.Interfaces;
+using WebAPI.Application.Interfaces;
+using WebAPI.Application.Services;
 using WebAPI.Application.Services;
 using WebAPI.Application.Validation;
 using WebAPI.Domain.Entities;
@@ -73,6 +75,8 @@ builder.Services.AddScoped<IComplaintStatusRepository, ComplaintStatusRepository
 builder.Services.AddScoped<IComplaintStatusService, ComplaintStatusService>();
 builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeRepository>();
 builder.Services.AddScoped<IGovermentEmployeeService, GovermentEmployeeService>();
+builder.Services.AddScoped<IComplaintReportService, ComplaintReportService>();
+//builder.Services.AddScoped<DailyComplaintsReport>();
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 builder.Services.AddCors(options => {
     options.AddPolicy("SignalRPolicy", policy => {
@@ -152,6 +156,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
+QuestPDF.Settings.License = LicenseType.Community;
 
 app.MapControllers();
 app.MapHub<LockoutHub>("/lockoutHub");

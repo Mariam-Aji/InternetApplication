@@ -12,8 +12,8 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260104000930_OtpCode")]
-    partial class OtpCode
+    [Migration("20260106121923__Initial")]
+    partial class _Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

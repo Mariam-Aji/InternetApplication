@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.Json;
 using WebAPI.Application.DTOs;
 using WebAPI.Application.Interfaces;
 
@@ -175,7 +176,45 @@ namespace WebAPI.Controllers
                 return StatusCode(500, "حدث خطأ أثناء استخراج تقرير الأداء: " + ex.Message);
             }
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("AllComplaint")]
+        public async Task<IActionResult> GetAllComplaint()
+        {
+            
+            var complaints = await _service.GetAllComplaintsAsync();
+
+            return Ok(new
+            {
+                status = 200,
+                total = complaints.Count,
+                complaints = complaints.Select(c => new
+                {
+                    id = c.Id,
+                    Date = c.ComplaintDate,
+                    complaintsType = c.ComplaintType,
+                    location = c.Location,
+                    description = c.Description,
+                    userId = c.UserId,
+                    user = new
+                    {
+                        id = c.User.Id,
+                        name = c.User.FullName,
+                        email = c.User.Email
+                    },
+
+                    // 🔴 التعديل هنا فقط
+                    Images = JsonSerializer.Deserialize<List<string>>(c.Images),
+
+                    PdfFile = c.PdfFile,
+                    governmentAgencyName = c.GovernmentAgency.AgencyName,
+                    statusId = c.ComplaintStatusId,
+                    statusName = c.ComplaintStatus.StatusName,
+                })
+            });
+        }
+
 
     }
+
 
 }

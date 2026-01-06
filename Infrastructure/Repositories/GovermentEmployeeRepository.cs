@@ -55,7 +55,7 @@ namespace WebAPI.Infrastructure.Repositories
                 ComplaintId = complaintId,
                 EmployeeId = employeeId,
                 LockedAt = DateTime.Now,
-                ExpiresAt = DateTime.Now.AddMinutes(10)
+                ExpiresAt = DateTime.Now.AddMinutes(5)
             };
 
             await _db.ComplaintLocks.AddAsync(newLock);

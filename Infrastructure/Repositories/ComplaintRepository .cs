@@ -104,4 +104,14 @@ namespace WebAPI.Infrastructure.Repositories
                 ReportGeneratedAt = DateTime.Now
             };
         }
+        public async Task<List<Complaint>> GetALLComplaintsAsync()
+        {
+            
+
+            return await _db.Complaints
+                .Include(c => c.User)
+                .Include(c => c.ComplaintStatus)
+                .Include(c => c.GovernmentAgency)
+                .ToListAsync();
+        }
     } }

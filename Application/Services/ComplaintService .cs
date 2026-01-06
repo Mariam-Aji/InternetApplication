@@ -192,5 +192,9 @@ namespace WebAPI.Application.Services
 
             return metrics;
         }
+        public async Task<List<Complaint>> GetAllComplaintsAsync( )
+        {
+            return await _repo.GetALLComplaintsAsync();
+        }
     }
 }

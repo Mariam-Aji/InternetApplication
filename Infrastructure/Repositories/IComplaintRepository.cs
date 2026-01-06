@@ -15,5 +15,6 @@ namespace WebAPI.Application.Interfaces
         Task<Dictionary<int, int>> GetComplaintsCountByStatusAsync();
         Task<IEnumerable<ComplaintHistory>> GetComplaintHistoriesAsync(int complaintId);
         Task<PerformanceMetricsDto> GetPerformanceMetricsAsync();
+        Task<List<Complaint>> GetALLComplaintsAsync();
     }
 }

@@ -6,6 +6,24 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Application\NewFolder\**" />
+    <Compile Remove="NewFolder1\**" />
+    <Compile Remove="NewFolder2\**" />
+    <Compile Remove="NewFolder\**" />
+    <Content Remove="Application\NewFolder\**" />
+    <Content Remove="NewFolder1\**" />
+    <Content Remove="NewFolder2\**" />
+    <Content Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Application\NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder1\**" />
+    <EmbeddedResource Remove="NewFolder2\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="Application\NewFolder\**" />
+    <None Remove="NewFolder1\**" />
+    <None Remove="NewFolder2\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Audit.EntityFramework.Core" Version="18.1.6" />
     <PackageReference Include="FluentValidation" Version="12.1.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
@@ -18,14 +36,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     
+    <PackageReference Include="QuestPDF" Version="2025.12.0" />
+    
 
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Application\NewFolder\" />
-    <Folder Include="NewFolder1\" />
-    <Folder Include="NewFolder2\" />
-    <Folder Include="NewFolder\" />
   </ItemGroup>
  
 </Project>
