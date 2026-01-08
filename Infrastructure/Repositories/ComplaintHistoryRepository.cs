@@ -1,0 +1,49 @@
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI.Domain.Entities;
+using WebAPI.Infrastructure.Db;
+
+
+namespace WebAPI.Infrastructure.Repositories
+{
+    public class ComplaintHistoryRepository : IComplaintHistoryRepository
+    {
+        private readonly AppDbContext _context;
+
+        public ComplaintHistoryRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task AddHistoryAsync(int complaintId, int employeeId, string actionType, string? newValue)
+        {
+            var history = new ComplaintHistory
+            {
+                ComplaintId = complaintId,
+                EmployeeId = employeeId,
+                ActionType = actionType,
+                NewValue = newValue,
+                ActionDate = DateTime.Now
+            };
+
+            _context.ComplaintHistories.Add(history);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<WebAPI.Domain.Entities.ComplaintHistory>> GetComplaintHistoriesAsync(int complaintId)
+        {
+            return await _context.ComplaintHistories
+                .Include(h => h.Employee)
+                .Where(h => h.ComplaintId == complaintId)
+                .OrderByDescending(h => h.ActionDate)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<WebAPI.Domain.Entities.ComplaintHistory>> GetAllHistoriesAsync()
+        {
+            return await _context.ComplaintHistories
+                .Include(h => h.Employee)
+                .OrderByDescending(h => h.ActionDate) 
+                .ToListAsync();
+        }
+    }
+
+} 
