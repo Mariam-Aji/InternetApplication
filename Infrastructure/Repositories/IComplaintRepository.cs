@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 ﻿using WebAPI.Application.DTOs;
 using WebAPI.Domain.Entities;
+=======
+﻿using WebAPI.Domain.Entities;
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 
 namespace WebAPI.Application.Interfaces
 {
@@ -17,6 +21,9 @@ namespace WebAPI.Application.Interfaces
         Task<IEnumerable<ComplaintHistory>> GetComplaintHistoriesAsync(int complaintId);
         Task<PerformanceMetricsDto> GetPerformanceMetricsAsync();
         Task<List<Complaint>> GetALLComplaintsAsync();
+<<<<<<< HEAD
 
+=======
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
     }
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿//using WebAPI.Migrations;
+=======
+﻿using WebAPI.Migrations;
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 
 namespace WebAPI.Infrastructure.Repositories
 {

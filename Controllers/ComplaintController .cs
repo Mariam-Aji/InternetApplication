@@ -162,19 +162,27 @@ namespace WebAPI.Controllers
 
             return Ok(history);
         }
+<<<<<<< HEAD
         [Authorize(Roles = "Admin")]
+=======
+        [Authorize(Roles = "Admin")] 
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
         [HttpGet("system-monitor")]
         public async Task<IActionResult> GetSystemMonitor()
         {
             try
             {
                 var metrics = await _service.GetSystemPerformanceAsync();
+<<<<<<< HEAD
                 return Ok(new
                 {
                     status = 200,
                     message = "تقرير أداء النظام الحالي",
                     performance = metrics
                 });
+=======
+                return Ok(metrics);
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
             }
             catch (Exception ex)
             {
@@ -207,7 +215,11 @@ namespace WebAPI.Controllers
                         email = c.User.Email
                     },
 
+<<<<<<< HEAD
                   
+=======
+                    // 🔴 التعديل هنا فقط
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
                     Images = JsonSerializer.Deserialize<List<string>>(c.Images),
 
                     PdfFile = c.PdfFile,
@@ -218,12 +230,16 @@ namespace WebAPI.Controllers
             });
         }
 
+<<<<<<< HEAD
         [HttpGet("performance-metrics")]
         public async Task<IActionResult> GetPerformance()
         {
             var metrics = await _repo.GetPerformanceMetricsAsync();
             return Ok(metrics);
         }
+=======
+
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
     }
 
 

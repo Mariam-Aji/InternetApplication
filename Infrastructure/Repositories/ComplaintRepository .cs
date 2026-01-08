@@ -2,8 +2,12 @@
 using WebAPI.Application.Interfaces;
 using WebAPI.Domain.Entities;
 using WebAPI.Infrastructure.Db;
+<<<<<<< HEAD
 using System.Diagnostics;
 using WebAPI.Application.DTOs;
+=======
+
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 namespace WebAPI.Infrastructure.Repositories
 {
     public class ComplaintRepository : IComplaintRepository
@@ -73,6 +77,7 @@ namespace WebAPI.Infrastructure.Repositories
                 .OrderByDescending(h => h.ActionDate)
                 .ToListAsync();
         }
+<<<<<<< HEAD
 
 
         public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
@@ -108,11 +113,55 @@ namespace WebAPI.Infrastructure.Repositories
 
         public async Task<List<Complaint>> GetALLComplaintsAsync()
         {
+=======
+        public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
+        {
+            var total = await _db.Complaints.CountAsync();
+            var completedCount = await _db.Complaints.CountAsync(c => c.ComplaintStatusId == 3);
+
+            double avgPendingDays = 0;
+            var pendingComplaints = await _db.Complaints
+                .Where(c => c.ComplaintStatusId != 3 && c.ComplaintDate != null) 
+                .ToListAsync();
+
+            if (pendingComplaints.Any())
+            {
+                DateTime today = DateTime.Today;
+
+                avgPendingDays = pendingComplaints.Average(c =>
+                {
+                   
+                    DateTime complaintDateTime = c.ComplaintDate!.Value.ToDateTime(TimeOnly.MinValue);
+                    return (today - complaintDateTime).TotalDays;
+                });
+            }
+
+            return new PerformanceMetricsDto
+            {
+                TotalComplaints = total,
+                CompletionRate = total > 0 ? (double)completedCount / total * 100 : 0,
+                PendingComplaints = await _db.Complaints.CountAsync(c => c.ComplaintStatusId == 1),
+                AverageProcessingTimeDays = Math.Round(avgPendingDays, 2),
+                SystemMemoryUsageBytes = GC.GetTotalMemory(false),
+                ReportGeneratedAt = DateTime.Now
+            };
+        }
+        public async Task<List<Complaint>> GetALLComplaintsAsync()
+        {
+            
+
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
             return await _db.Complaints
                 .Include(c => c.User)
                 .Include(c => c.ComplaintStatus)
                 .Include(c => c.GovernmentAgency)
+<<<<<<< HEAD
                 .ToListAsync() ?? new List<Complaint>(); 
         }
     }
 } 
+=======
+                .ToListAsync();
+        }
+    } }
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76

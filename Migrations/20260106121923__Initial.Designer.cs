@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Infrastructure.Db;
 
@@ -11,9 +12,11 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260106121923__Initial")]
+    partial class _Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,48 +25,6 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
-            modelBuilder.Entity("WebAPI.Domain.Entities.AuditLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Action")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Controller")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ExecutionTimeMs")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("IpAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AuditLogs");
-                });
-
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
                     b.Property<int>("Id")
@@ -250,51 +211,11 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("AgencyName")
                         .IsRequired()
-<<<<<<< HEAD
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-=======
                         .HasColumnType("nvarchar(max)");
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 
                     b.HasKey("Id");
 
                     b.ToTable("GovernmentAgencies");
-<<<<<<< HEAD
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AgencyName = "وزارة الصحة"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AgencyName = "وزارة التعليم"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AgencyName = "وزارة الداخلية"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AgencyName = "وزارة العمل والشؤون الاجتماعية"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AgencyName = "أمانة العاصمة"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AgencyName = "هيئة النزاهة"
-                        });
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.OtpCode", b =>

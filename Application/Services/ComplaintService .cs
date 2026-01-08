@@ -186,14 +186,26 @@ namespace WebAPI.Application.Services
                 PerformedBy = h.Employee != null ? h.Employee.FullName : "نظام آلي"
             });
         }
+<<<<<<< HEAD
        
+=======
+        public async Task<PerformanceMetricsDto> GetSystemPerformanceAsync()
+        {
+            var metrics = await _repo.GetPerformanceMetricsAsync();
+
+            return metrics;
+        }
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
         public async Task<List<Complaint>> GetAllComplaintsAsync( )
         {
             return await _repo.GetALLComplaintsAsync();
         }
+<<<<<<< HEAD
         public async Task<PerformanceMetricsDto> GetSystemPerformanceAsync()
         {
             return await _repo.GetPerformanceMetricsAsync();
         }
+=======
+>>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
     }
 }
