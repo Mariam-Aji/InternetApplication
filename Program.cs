@@ -88,14 +88,24 @@ builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<LogActivityAttribute>();
 
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+builder.Services.AddSignalR().AddStackExchangeRedis("localhost:6379", Options =>
+{
+    Options.Configuration.ChannelPrefix = "complainthub";
+});
 builder.Services.AddCors(options => {
     options.AddPolicy("SignalRPolicy", policy => {
-        policy.WithOrigins("http://127.0.0.1:5500") 
-              .AllowAnyHeader()
+
+        policy.WithOrigins("http://127.0.0.1:5500")
+        .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); 
+              .AllowCredentials();
+       
+
+
+
     });
 });
+
 builder.Services.Configure<SmtpSettings>(
  builder.Configuration.GetSection("SmtpSettings"));
 
@@ -163,15 +173,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseStaticFiles();
-
+app.UseRouting();
+app.UseCors("SignalRPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 QuestPDF.Settings.License = LicenseType.Community;
 
 app.MapControllers();
+
 app.MapHub<LockoutHub>("/lockoutHub");
 app.MapHub<NotificationHub>("/notificationHub");
-app.UseCors("SignalRPolicy");
+
 app.MapHub<ComplaintHub>("/complainthub");
 app.UseStaticFiles(new StaticFileOptions
 {
