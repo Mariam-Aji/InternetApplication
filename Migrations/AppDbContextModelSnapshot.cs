@@ -22,7 +22,6 @@ namespace WebAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("WebAPI.Domain.Entities.AuditLog", b =>
                 {
                     b.Property<int>("Id")
@@ -62,8 +61,6 @@ namespace WebAPI.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
                     b.Property<int>("Id")
@@ -250,17 +247,12 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("AgencyName")
                         .IsRequired()
-<<<<<<< HEAD
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-=======
-                        .HasColumnType("nvarchar(max)");
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 
                     b.HasKey("Id");
 
                     b.ToTable("GovernmentAgencies");
-<<<<<<< HEAD
 
                     b.HasData(
                         new
@@ -293,8 +285,6 @@ namespace WebAPI.Migrations
                             Id = 6,
                             AgencyName = "هيئة النزاهة"
                         });
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.OtpCode", b =>

@@ -14,6 +14,25 @@ namespace WebAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AuditLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Controller = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExecutionTimeMs = table.Column<long>(type: "bigint", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ComplaintLocks",
                 columns: table => new
                 {
@@ -48,7 +67,7 @@ namespace WebAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AgencyName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AgencyName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -199,6 +218,19 @@ namespace WebAPI.Migrations
                     { 4, "مرفوضة" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "GovernmentAgencies",
+                columns: new[] { "Id", "AgencyName" },
+                values: new object[,]
+                {
+                    { 1, "وزارة الصحة" },
+                    { 2, "وزارة التعليم" },
+                    { 3, "وزارة الداخلية" },
+                    { 4, "وزارة العمل والشؤون الاجتماعية" },
+                    { 5, "أمانة العاصمة" },
+                    { 6, "هيئة النزاهة" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ComplaintAdministrations_ComplaintId",
                 table: "ComplaintAdministrations",
@@ -245,6 +277,9 @@ namespace WebAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AuditLogs");
+
             migrationBuilder.DropTable(
                 name: "ComplaintAdministrations");
 

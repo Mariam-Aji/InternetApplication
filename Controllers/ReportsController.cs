@@ -4,18 +4,12 @@ using QuestPDF.Fluent;
 using WebAPI.Application.Interfaces;
 using WebAPI.Application.Services;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/reports")]
-<<<<<<< HEAD
-    
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
+
     public class ReportsController : ControllerBase
     {
         private readonly IComplaintReportService _reportService;

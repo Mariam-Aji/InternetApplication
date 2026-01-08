@@ -12,7 +12,7 @@ using WebAPI.Infrastructure.Db;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260106121923__Initial")]
+    [Migration("20260108084702__Initial")]
     partial class _Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,45 @@ namespace WebAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("WebAPI.Domain.Entities.AuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Controller")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ExecutionTimeMs")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuditLogs");
+                });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.Complaint", b =>
                 {
@@ -211,11 +250,44 @@ namespace WebAPI.Migrations
 
                     b.Property<string>("AgencyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.ToTable("GovernmentAgencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AgencyName = "وزارة الصحة"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AgencyName = "وزارة التعليم"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AgencyName = "وزارة الداخلية"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AgencyName = "وزارة العمل والشؤون الاجتماعية"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AgencyName = "أمانة العاصمة"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AgencyName = "هيئة النزاهة"
+                        });
                 });
 
             modelBuilder.Entity("WebAPI.Domain.Entities.OtpCode", b =>

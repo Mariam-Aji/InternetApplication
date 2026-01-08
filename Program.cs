@@ -16,10 +16,7 @@ using WebAPI.Application.Services;
 using WebAPI.Application.Services;
 using WebAPI.Application.Validation;
 using WebAPI.Domain.Entities;
-<<<<<<< HEAD
 
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 using WebAPI.Hubs;
 using WebAPI.Infrastructure.Db;
 using WebAPI.Infrastructure.Email;
@@ -81,7 +78,7 @@ builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeReposit
 builder.Services.AddScoped<IGovermentEmployeeService, GovermentEmployeeService>();
 builder.Services.AddScoped<IComplaintReportService, ComplaintReportService>();
 //builder.Services.AddScoped<DailyComplaintsReport>();
-<<<<<<< HEAD
+
 builder.Services.AddScoped<LogActivityAttribute>();
 builder.Services.AddControllers(options => {
     options.Filters.Add<LogActivityAttribute>();
@@ -89,8 +86,7 @@ builder.Services.AddControllers(options => {
 builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<LogActivityAttribute>();
-=======
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
+
 builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
 builder.Services.AddCors(options => {
     options.AddPolicy("SignalRPolicy", policy => {

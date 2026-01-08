@@ -2,12 +2,10 @@
 using WebAPI.Application.Interfaces;
 using WebAPI.Domain.Entities;
 using WebAPI.Infrastructure.Db;
-<<<<<<< HEAD
+
 using System.Diagnostics;
 using WebAPI.Application.DTOs;
-=======
 
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
 namespace WebAPI.Infrastructure.Repositories
 {
     public class ComplaintRepository : IComplaintRepository
@@ -77,43 +75,10 @@ namespace WebAPI.Infrastructure.Repositories
                 .OrderByDescending(h => h.ActionDate)
                 .ToListAsync();
         }
-<<<<<<< HEAD
 
 
-        public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
-        {
-            var currentProcess = Process.GetCurrentProcess();
 
-            double memoryInMB = currentProcess.WorkingSet64 / (1024.0 * 1024.0);
-
-            var startTime = DateTime.UtcNow;
-            var startCpuUsage = currentProcess.TotalProcessorTime;
-
-            await Task.Delay(200);
-
-            currentProcess.Refresh();
-            var endCpuUsage = currentProcess.TotalProcessorTime;
-            var endTime = DateTime.UtcNow;
-
-            var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
-            var totalMsPassed = (endTime - startTime).TotalMilliseconds;
-
-            var cpuUsagePercent = totalMsPassed > 0
-                ? (cpuUsedMs / (Environment.ProcessorCount * totalMsPassed)) * 100
-                : 0;
-
-            return new PerformanceMetricsDto
-            {
-                MemoryUsageMB = $"{Math.Round(memoryInMB, 2)} MB",
-                CpuUsagePercentage = $"{Math.Round(cpuUsagePercent, 2)}%",
-                ActiveThreads = currentProcess.Threads.Count,
-                ReportGeneratedAt = DateTime.Now
-            };
-        }
-
-        public async Task<List<Complaint>> GetALLComplaintsAsync()
-        {
-=======
+ 
         public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
         {
             var total = await _db.Complaints.CountAsync();
@@ -149,19 +114,15 @@ namespace WebAPI.Infrastructure.Repositories
         public async Task<List<Complaint>> GetALLComplaintsAsync()
         {
             
-
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
             return await _db.Complaints
                 .Include(c => c.User)
                 .Include(c => c.ComplaintStatus)
                 .Include(c => c.GovernmentAgency)
-<<<<<<< HEAD
+
                 .ToListAsync() ?? new List<Complaint>(); 
         }
     }
 } 
-=======
-                .ToListAsync();
-        }
-    } }
->>>>>>> de431c5bc2c01e485946d971fe16b71df9778b76
+
+         
+
