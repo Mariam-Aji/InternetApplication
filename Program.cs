@@ -78,7 +78,8 @@ builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeReposit
 builder.Services.AddScoped<IGovermentEmployeeService, GovermentEmployeeService>();
 builder.Services.AddScoped<IComplaintReportService, ComplaintReportService>();
 //builder.Services.AddScoped<DailyComplaintsReport>();
-
+builder.Services.AddScoped<DatabaseBackupService>();
+builder.Services.AddHostedService<WeeklyBackupJop>();
 builder.Services.AddScoped<LogActivityAttribute>();
 builder.Services.AddControllers(options => {
     options.Filters.Add<LogActivityAttribute>();
