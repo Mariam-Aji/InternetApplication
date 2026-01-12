@@ -19,12 +19,20 @@ namespace WebAPI.Application.Services
         IHubContext<NotificationHub> hub)
         {
             _repo = repo;
+<<<<<<< HEAD
             _historyRepo = historyRepo; 
+=======
+            _historyRepo = historyRepo;
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
             _hub = hub;
         }
 
         public async Task<Complaint?> AddComplaintAsync(ComplaintRequest request)
         {
+<<<<<<< HEAD
+=======
+
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
             var exists = await _repo.GovernmentAgencyExistsAsync(request.GovernmentAgencyId);
             if (!exists) return null;
 
@@ -39,6 +47,7 @@ namespace WebAPI.Application.Services
                 ComplaintDate = DateOnly.FromDateTime(DateTime.Now)
             };
 
+<<<<<<< HEAD
             var imagePaths = new List<string>();
 
             if (request.Images != null && request.Images.Count > 0)
@@ -57,6 +66,35 @@ namespace WebAPI.Application.Services
             await _repo.AddAsync(complaint);
 
             await _hub.Clients.Group($"Citizen_{complaint.UserId}")
+=======
+
+            var uploadTasks = new List<Task<string>>();
+
+            if (request.Images != null && request.Images.Count > 0)
+            {
+                uploadTasks.AddRange(request.Images.Select(img => SaveFileAsync(img)));
+            }
+
+            if (request.PdfFile != null)
+            {
+                uploadTasks.Add(SaveFileAsync(request.PdfFile));
+            }
+
+            var allFilesResults = await Task.WhenAll(uploadTasks);
+
+            var imagePaths = allFilesResults.Take(request.Images?.Count ?? 0).ToList();
+            complaint.Images = JsonSerializer.Serialize(imagePaths);
+
+            if (request.PdfFile != null)
+            {
+                complaint.PdfFile = allFilesResults.Last();
+            }
+
+            await _repo.AddAsync(complaint);
+
+
+            _ = _hub.Clients.Group($"Citizen_{complaint.UserId}")
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
                 .SendAsync("ReceiveNotification", new
                 {
                     complaintId = complaint.Id,
@@ -65,6 +103,7 @@ namespace WebAPI.Application.Services
 
             return complaint;
         }
+<<<<<<< HEAD
 
 
         private async Task<string> SaveFileAsync(IFormFile file)
@@ -76,6 +115,22 @@ namespace WebAPI.Application.Services
             var filePath = Path.Combine(uploadsFolder, file.FileName);
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
+=======
+        private async Task<string> SaveFileAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0) return string.Empty;
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
+            {
+                await file.CopyToAsync(stream);
+            }
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
             return filePath;
         }
         public async Task<bool> UpdateComplaintFilesAsync(int complaintId, int userId, UpdateComplaintFilesDto dto)
@@ -156,7 +211,11 @@ namespace WebAPI.Application.Services
                 Rejected = counts.GetValueOrDefault(4)     // مرفوضة
             };
         }
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
         public async Task<IEnumerable<ComplaintHistoryDto>> GetHistoryByComplaintIdAsync(int complaintId)
         {
             var histories = await _historyRepo.GetComplaintHistoriesAsync(complaintId);
@@ -189,16 +248,27 @@ namespace WebAPI.Application.Services
 
         public async Task<PerformanceMetricsDto> GetSystemPerformanceAsync()
         {
+<<<<<<< HEAD
             var metrics = await _repo.GetPerformanceMetricsAsync();
 
             return metrics;
         }
 
         public async Task<List<Complaint>> GetAllComplaintsAsync( )
+=======
+            return await _repo.GetPerformanceMetricsAsync();
+        }
+
+        public async Task<List<Complaint>> GetAllComplaintsAsync()
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
         {
             return await _repo.GetALLComplaintsAsync();
         }
 
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
     }
 }

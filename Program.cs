@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore ;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -49,7 +50,8 @@ builder.Services.AddControllers()
             var response = new
             {
                 Status = 400,
-                Message = string.Join(" | ", errors) 
+
+                Message = string.Join(" | ", errors)
             };
 
             return new BadRequestObjectResult(response);
@@ -58,14 +60,27 @@ builder.Services.AddControllers()
     });
 // Db
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    sqlOptions => {
+        
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null);
+    }));
+builder.Services.AddMemoryCache();
 
 
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 // Repos & Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-builder.Services.AddScoped< UserRepository>();
+builder.Services.AddScoped<UserRepository>();
 
 builder.Services.AddScoped<IComplaintRepository, ComplaintRepository>();
 builder.Services.AddScoped<IComplaintService, ComplaintService>();
@@ -78,12 +93,12 @@ builder.Services.AddScoped<IGovermentEmployeeRepositry, GovermentEmployeeReposit
 builder.Services.AddScoped<IGovermentEmployeeService, GovermentEmployeeService>();
 builder.Services.AddScoped<IComplaintReportService, ComplaintReportService>();
 //builder.Services.AddScoped<DailyComplaintsReport>();
-builder.Services.AddScoped<DatabaseBackupService>();
-builder.Services.AddHostedService<WeeklyBackupJop>();
+
+
 builder.Services.AddScoped<LogActivityAttribute>();
 builder.Services.AddControllers(options => {
     options.Filters.Add<LogActivityAttribute>();
- });
+});
 builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddScoped<LogActivityAttribute>();
@@ -110,6 +125,34 @@ builder.Services.AddCors(options => {
 builder.Services.Configure<SmtpSettings>(
  builder.Configuration.GetSection("SmtpSettings"));
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("SignalRPolicy", policy => {
+        policy.WithOrigins("http://127.0.0.1:5500")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+builder.Services.Configure<SmtpSettings>(
+ builder.Configuration.GetSection("SmtpSettings"));
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600; 
+    options.Limits.MaxConcurrentConnections = 2000;
+    options.Limits.MaxConcurrentUpgradedConnections = 2000;
+});
+
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 42949672960; 
+});
+
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxConcurrentConnections = 10000000000000000;
+});
 
 
 // JWT
@@ -157,7 +200,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials()
-                .SetIsOriginAllowed(_ => true);  
+                .SetIsOriginAllowed(_ => true);
         });
 });
 
@@ -166,25 +209,35 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseResponseCompression();
 app.UseCors("AllowAll");
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 app.UseStaticFiles();
-app.UseRouting();
-app.UseCors("SignalRPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 QuestPDF.Settings.License = LicenseType.Community;
 
 app.MapControllers();
-
 app.MapHub<LockoutHub>("/lockoutHub");
 app.MapHub<NotificationHub>("/notificationHub");
-
+app.UseCors("SignalRPolicy");
 app.MapHub<ComplaintHub>("/complainthub");
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -197,4 +250,4 @@ using (var scope = app.Services.CreateScope())
     var useRepo = scope.ServiceProvider.GetRequiredService<UserRepository>();
     await useRepo.SeedAdminAsync();
 }
-    app.Run();
+app.Run();

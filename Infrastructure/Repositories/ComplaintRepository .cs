@@ -59,8 +59,13 @@ namespace WebAPI.Infrastructure.Repositories
             await _db.ComplaintHistories.AddAsync(history);
             await _db.SaveChangesAsync();
         }
+<<<<<<< HEAD
     
     public async Task<Dictionary<int, int>> GetComplaintsCountByStatusAsync()
+=======
+
+        public async Task<Dictionary<int, int>> GetComplaintsCountByStatusAsync()
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
         {
             return await _db.Complaints
                 .GroupBy(c => c.ComplaintStatusId ?? 1)
@@ -70,7 +75,11 @@ namespace WebAPI.Infrastructure.Repositories
         public async Task<IEnumerable<ComplaintHistory>> GetComplaintHistoriesAsync(int complaintId)
         {
             return await _db.ComplaintHistories
+<<<<<<< HEAD
                 .Include(h => h.Employee) 
+=======
+                .Include(h => h.Employee)
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
                 .Where(h => h.ComplaintId == complaintId)
                 .OrderByDescending(h => h.ActionDate)
                 .ToListAsync();
@@ -78,6 +87,7 @@ namespace WebAPI.Infrastructure.Repositories
 
 
 
+<<<<<<< HEAD
  
         public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
         {
@@ -108,21 +118,58 @@ namespace WebAPI.Infrastructure.Repositories
                 PendingComplaints = await _db.Complaints.CountAsync(c => c.ComplaintStatusId == 1),
                 AverageProcessingTimeDays = Math.Round(avgPendingDays, 2),
                 SystemMemoryUsageBytes = GC.GetTotalMemory(false),
+=======
+
+        public async Task<PerformanceMetricsDto> GetPerformanceMetricsAsync()
+        {
+            var currentProcess = Process.GetCurrentProcess();
+            double memoryUsageInMB = currentProcess.WorkingSet64 / (1024.0 * 1024.0);
+
+
+            var startTime = DateTime.UtcNow;
+            var startCpuUsage = currentProcess.TotalProcessorTime;
+            await Task.Delay(100);
+            currentProcess.Refresh();
+            var endCpuUsage = currentProcess.TotalProcessorTime;
+            var endTime = DateTime.UtcNow;
+
+            var cpuUsedMs = (endCpuUsage - startCpuUsage).TotalMilliseconds;
+            var totalMsPassed = (endTime - startTime).TotalMilliseconds;
+            var cpuUsagePercent = (cpuUsedMs / (Environment.ProcessorCount * totalMsPassed)) * 100;
+
+            return new PerformanceMetricsDto
+            {
+                MemoryUsageMB = $"{Math.Round(memoryUsageInMB, 2)} MB",
+                CpuUsagePercentage = $"{Math.Round(cpuUsagePercent, 2)}%",
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
                 ReportGeneratedAt = DateTime.Now
             };
         }
         public async Task<List<Complaint>> GetALLComplaintsAsync()
         {
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
             return await _db.Complaints
                 .Include(c => c.User)
                 .Include(c => c.ComplaintStatus)
                 .Include(c => c.GovernmentAgency)
 
+<<<<<<< HEAD
                 .ToListAsync() ?? new List<Complaint>(); 
         }
     }
 } 
 
          
+=======
+                .ToListAsync() ?? new List<Complaint>();
+        }
+    }
+}
+
+
+>>>>>>> f8b3d41 (Performance: optimize server to handle up to 100 concurrent users)
 
